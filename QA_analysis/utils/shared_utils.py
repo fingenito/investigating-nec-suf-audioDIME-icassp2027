@@ -1,0 +1,683 @@
+import re
+import os
+from collections import OrderedDict
+import librosa
+import torch
+import numpy as np
+from qwen_omni_utils import process_mm_info
+from typing import Any, Dict, List, Optional, Tuple
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+_AUDIO_EXTS = (".wav", ".flac", ".mp3", ".ogg", ".m4a")
+
+_MUSICCAPS_SEGMENT_RE = re.compile(
+    r"^\[[^\]]+\]-\[\d+(?:\.\d+)?-\d+(?:\.\d+)?\]\.(wav|flac|mp3|ogg|m4a)$",
+    re.IGNORECASE,
+)
+
+def _is_inline_audio_input(audio_input: Any) -> bool:
+    return (
+        isinstance(audio_input, dict)
+        and "array" in audio_input
+        and "sampling_rate" in audio_input
+    )
+
+def _normalize_inline_audio_input(audio_input: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Normalizza il payload audio inline interno del progetto.
+
+    Input atteso:
+        {
+            "array": np.ndarray | list,
+            "sampling_rate": int,
+        }
+
+    Output:
+        {
+            "array": np.ndarray float32 mono 1D,
+            "sampling_rate": int,
+        }
+    """
+    y = np.asarray(audio_input["array"], dtype=np.float32).reshape(-1)
+    y = np.nan_to_num(y, nan=0.0, posinf=0.0, neginf=0.0)
+
+    sr = int(audio_input["sampling_rate"])
+    if sr <= 0:
+        raise ValueError(f"Invalid sampling_rate for inline audio input: {sr}")
+
+    return {
+        "array": y,
+        "sampling_rate": sr,
+    }
+
+def _prepare_inline_audios_for_processor(processor, conversation):
+    """
+    Estrae gli audio inline dalla conversation e li converte nel formato
+    atteso dal processor HF/Qwen:
+
+    - audio: list[np.ndarray]
+    - sampling_rate: int
+
+    Tutti gli audio vengono eventualmente resamplati al sampling rate
+    del feature extractor del processor.
+    """
+    target_sr = int(processor.feature_extractor.sampling_rate)
+    audios: List[np.ndarray] = []
+
+    for msg in conversation or []:
+        for item in msg.get("content", []) or []:
+            if item.get("type") != "audio":
+                continue
+
+            audio_obj = item.get("audio", None)
+            if not _is_inline_audio_input(audio_obj):
+                continue
+
+            norm = _normalize_inline_audio_input(audio_obj)
+            y = norm["array"]
+            sr = int(norm["sampling_rate"])
+
+            if sr != target_sr:
+                y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
+                y = np.asarray(y, dtype=np.float32).reshape(-1)
+
+            audios.append(y)
+
+    return audios, target_sr
+
+def _conversation_has_inline_audio(conversation) -> bool:
+    """
+    True se nella conversation è presente almeno un contenuto audio inline
+    nel formato {"array": ..., "sampling_rate": ...}.
+    """
+    for msg in conversation or []:
+        for item in msg.get("content", []) or []:
+            if item.get("type") != "audio":
+                continue
+            audio_obj = item.get("audio", None)
+            if _is_inline_audio_input(audio_obj):
+                return True
+    return False
+
+
+def _build_qwen25_audio_messages(audio_path: Any, prompt: str):
+    """
+    Compatibilità doppia:
+    - vecchio path file: str
+    - nuovo audio inline: {"array": np.ndarray, "sampling_rate": int}
+
+    Nota:
+    non stiamo cambiando la pipeline Qwen; stiamo solo permettendo
+    che il media object sia già in memoria invece che su disco.
+    """
+    if _is_inline_audio_input(audio_path):
+        audio_payload = _normalize_inline_audio_input(audio_path)
+    else:
+        audio_payload = str(audio_path)
+
+    return [
+        {
+            "role": "user",
+            "content": [
+                {"type": "audio", "audio": audio_payload},
+                {"type": "text", "text": prompt},
+            ],
+        }
+    ]
+
+
+
+_QWEN_CHAT_TEMPLATE_CACHE: "OrderedDict[tuple, str]" = OrderedDict()
+
+def _conversation_template_cache_key(conversation, use_audio_in_video: bool) -> tuple:
+    """
+    Chiave cache SOLO per il testo prodotto da apply_chat_template.
+    Non include i valori numerici dell'audio: per il template contano
+    struttura multimodale e testo, non il waveform.
+    """
+    key_items = [bool(use_audio_in_video)]
+
+    for msg in conversation or []:
+        role = str(msg.get("role", ""))
+        key_items.append(("role", role))
+
+        for item in msg.get("content", []) or []:
+            typ = str(item.get("type", ""))
+            if typ == "text":
+                key_items.append(("text", str(item.get("text", ""))))
+            elif typ == "audio":
+                # conta solo che ci sia un audio item
+                key_items.append(("audio", 1))
+            elif typ == "image":
+                key_items.append(("image", 1))
+            elif typ == "video":
+                key_items.append(("video", 1))
+            else:
+                key_items.append((typ, 1))
+
+    return tuple(key_items)
+
+def _cached_apply_chat_template(
+    processor,
+    conversation,
+    use_audio_in_video: bool = False,
+) -> str:
+    """
+    Cache LRU molto semplice del testo generato da apply_chat_template.
+    Riduce overhead CPU lato prompt ripetuti.
+    """
+    global _QWEN_CHAT_TEMPLATE_CACHE
+
+    max_size = int(os.environ.get("DIME_QWEN_TEXT_CACHE_SIZE", "4096"))
+    if max_size <= 0:
+        return processor.apply_chat_template(
+            conversation,
+            add_generation_prompt=True,
+            tokenize=False,
+        )
+
+    key = _conversation_template_cache_key(
+        conversation=conversation,
+        use_audio_in_video=use_audio_in_video,
+    )
+
+    cached = _QWEN_CHAT_TEMPLATE_CACHE.get(key, None)
+    if cached is not None:
+        _QWEN_CHAT_TEMPLATE_CACHE.move_to_end(key, last=True)
+        return cached
+
+    text = processor.apply_chat_template(
+        conversation,
+        add_generation_prompt=True,
+        tokenize=False,
+    )
+
+    _QWEN_CHAT_TEMPLATE_CACHE[key] = text
+    _QWEN_CHAT_TEMPLATE_CACHE.move_to_end(key, last=True)
+
+    while len(_QWEN_CHAT_TEMPLATE_CACHE) > max_size:
+        _QWEN_CHAT_TEMPLATE_CACHE.popitem(last=False)
+
+    return text
+
+def prepare_qwen25_omni_inputs(
+    processor,
+    conversation,
+    device=None,
+    dtype=None,
+    use_audio_in_video: bool = False,
+):
+    """
+    Pipeline Qwen2.5-Omni:
+
+    - caso standard (path file): apply_chat_template -> process_mm_info -> processor(...)
+    - caso audio inline in RAM: apply_chat_template -> estrazione waveform numpy ->
+      processor(..., audio=[np.ndarray, ...], sampling_rate=target_sr)
+
+    MOTIVO:
+    il ramo standard con process_mm_info è corretto per path file.
+    Il ramo inline invece NON deve passare dict del tipo
+    {"array": ..., "sampling_rate": ...} al processor, perché il processor
+    si aspetta waveform raw (np.ndarray) e sampling_rate separato.
+    """
+    text = _cached_apply_chat_template(
+        processor=processor,
+        conversation=conversation,
+        use_audio_in_video=use_audio_in_video,
+    )
+
+    has_inline_audio = _conversation_has_inline_audio(conversation)
+
+    if has_inline_audio:
+        audios, inline_sampling_rate = _prepare_inline_audios_for_processor(
+            processor=processor,
+            conversation=conversation,
+        )
+        images = None
+        videos = None
+
+        inputs = processor(
+            text=text,
+            audio=audios,
+            images=images,
+            videos=videos,
+            sampling_rate=inline_sampling_rate,
+            return_tensors="pt",
+            padding=True,
+            use_audio_in_video=use_audio_in_video,
+        )
+    else:
+        audios, images, videos = process_mm_info(
+            conversation,
+            use_audio_in_video=use_audio_in_video,
+        )
+
+        inputs = processor(
+            text=text,
+            audio=audios,
+            images=images,
+            videos=videos,
+            return_tensors="pt",
+            padding=True,
+            use_audio_in_video=use_audio_in_video,
+        )
+
+    if device is not None:
+        inputs = inputs.to(device)
+
+    if dtype is not None:
+        try:
+            inputs = inputs.to(dtype)
+        except Exception:
+            pass
+
+    return text, inputs
+
+def ask_yes_no(question):
+    while True:
+        reply = input(f"{question} (s/n): ").strip().lower()
+        if reply in ["s", "si", "y", "yes"]:
+            return True
+        if reply in ["n", "no"]:
+            return False
+        print("Risposta non valida, inserisci 's' o 'n'.")
+
+def generate_caption(model, processor, audio_path, prompt):
+
+    try:
+        print("Generazione caption base...")
+
+        messages = _build_qwen25_audio_messages(audio_path, prompt)
+        _text, inputs = prepare_qwen25_omni_inputs(
+            processor=processor,
+            conversation=messages,
+            device=model.device,
+            dtype=getattr(model, "dtype", None),
+            use_audio_in_video=False,
+        )
+
+        with torch.inference_mode():
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=16,
+                return_dict_in_generate=True,
+                use_cache=False
+            )
+
+        sequences = outputs.sequences
+        input_len = int(inputs["input_ids"].shape[1])
+        gen_ids = sequences[0, input_len:]
+
+        tok = processor.tokenizer
+        try:
+            im_end_id = tok.convert_tokens_to_ids("<|im_end|>")
+        except Exception:
+            im_end_id = getattr(tok, "eos_token_id", None)
+
+        if im_end_id is not None:
+            cut = len(gen_ids)
+            for i in range(len(gen_ids)):
+                if int(gen_ids[i].item()) == int(im_end_id):
+                    cut = i
+                    break
+            gen_ids = gen_ids[:cut]
+
+        response = tok.decode(
+            gen_ids.detach().cpu().tolist(),
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        ).strip()
+
+        print(f"Caption generata: {response}")
+        return response
+
+    except Exception as e:
+        print(f"Errore nella generazione della caption: {str(e)}")
+        raise
+
+def tokenize_caption_for_mmshap(text, processor, return_ids: bool = False):
+    tok = processor.tokenizer
+    ids = tok.encode(text, add_special_tokens=False)
+    raw_tokens = tok.convert_ids_to_tokens(ids)
+
+    clean = []
+    for t in raw_tokens:
+        if isinstance(t, bytes):
+            t = t.decode("utf-8", errors="ignore")
+        clean.append(str(t).replace("\n", "").replace("\t", ""))
+
+    if return_ids:
+        return ids, clean
+    return clean
+
+
+def get_token_logit_autoregressive_id(
+    model,
+    processor,
+    audio_input: Any,
+    prompt: str,
+    prefix_ids: list,
+    target_id: int,
+) -> float:
+
+    tok = processor.tokenizer
+
+    if prefix_ids:
+        prefix_tokens = tok.convert_ids_to_tokens(prefix_ids)
+        prefix_text = tok.convert_tokens_to_string(prefix_tokens)
+        full_prompt = prompt + " " + prefix_text if prefix_text else prompt
+    else:
+        full_prompt = prompt
+
+    messages = _build_qwen25_audio_messages(audio_input, full_prompt)
+    _text, inputs = prepare_qwen25_omni_inputs(
+        processor=processor,
+        conversation=messages,
+        device=model.device,
+        dtype=getattr(model, "dtype", None),
+        use_audio_in_video=False,
+    )
+
+    with torch.inference_mode():
+        outputs = model(**inputs, use_cache=False)
+
+    logits = outputs.logits[0, -1]
+    vocab_size = int(logits.size(-1))
+
+    if not isinstance(target_id, int) or target_id < 0 or target_id >= vocab_size:
+        return float(logits.mean().item())
+
+    return float(logits[target_id].item())
+
+# ======================================================================================
+# WORD-LEVEL UTILS (POSTPROCESS ONLY) — robust for byte-level BPE (Qwen2 / Qwen-Audio)
+# ======================================================================================
+from typing import Any, Dict, List, Optional, Tuple
+
+def _to_int_list(xs: List[Any]) -> List[int]:
+    out = []
+    for x in xs or []:
+        try:
+            out.append(int(x))
+        except Exception:
+            continue
+    return out
+
+def _clean_word_label_ws(s: str) -> str:
+    # normalize whitespace for display only
+    if s is None:
+        return ""
+    s = str(s).replace("\n", " ").replace("\t", " ").replace("\r", " ")
+    while "  " in s:
+        s = s.replace("  ", " ")
+    return s.strip()
+
+def build_word_groups_from_token_ids(
+    tokenizer,
+    token_ids: List[int],
+    drop_empty: bool = True,
+) -> List[Dict[str, Any]]:
+    """
+    Build word groups from token IDs using tokenizer.decode incrementally.
+    This is robust for byte-level BPE (Qwen2/Qwen-Audio), GPT-2-like, etc.
+
+    Idea:
+      - decode prefix up to i (exclusive) and up to i+1, and take the delta
+      - the delta is the new text contributed by token i
+      - we split deltas by whitespace boundaries to form word groups
+      - we maintain mapping word -> token_indices
+
+    Output groups:
+      [{"label": "word", "raw": "word", "token_indices": [...]}]
+    """
+    ids = _to_int_list(token_ids)
+    if not ids:
+        return []
+
+    # decode prefix texts
+    # we keep cleanup disabled where possible to preserve spacing behavior
+    def _decode(prefix_ids: List[int]) -> str:
+        try:
+            return tokenizer.decode(prefix_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
+        except TypeError:
+            return tokenizer.decode(prefix_ids, skip_special_tokens=False)
+
+    groups: List[Dict[str, Any]] = []
+    current_raw = ""
+    current_token_indices: List[int] = []
+
+    prev_text = _decode([])
+
+    for i in range(len(ids)):
+        cur_text = _decode(ids[: i + 1])
+        # delta contributed by this token
+        delta = cur_text[len(prev_text):] if cur_text.startswith(prev_text) else cur_text
+        prev_text = cur_text
+
+        if delta == "":
+            # sometimes special/empty behavior; still keep token mapping if needed
+            if not current_token_indices:
+                current_token_indices = [i]
+            else:
+                current_token_indices.append(i)
+            continue
+
+        # If delta contains whitespace, it may start a new word boundary
+        # Example: " hello" or " world"
+        parts: List[str] = []
+        buf = ""
+        for ch in delta:
+            if ch.isspace():
+                if buf != "":
+                    parts.append(buf)
+                    buf = ""
+                # whitespace triggers boundary; represent as special marker
+                parts.append(" ")
+            else:
+                buf += ch
+        if buf != "":
+            parts.append(buf)
+
+        for p in parts:
+            if p == " ":
+                # boundary: flush current word
+                if current_token_indices:
+                    label = _clean_word_label_ws(current_raw)
+                    if (not drop_empty) or (label != ""):
+                        groups.append({
+                            "label": label,
+                            "raw": current_raw,
+                            "token_indices": list(current_token_indices),
+                        })
+                    current_raw = ""
+                    current_token_indices = []
+                # else ignore multiple spaces
+                continue
+
+            # normal characters: accumulate
+            if not current_token_indices:
+                current_token_indices = [i]
+            else:
+                # token i contributes to this word too
+                if current_token_indices[-1] != i:
+                    current_token_indices.append(i)
+            current_raw += p
+
+        # Ensure token i belongs somewhere even if delta had only spaces
+        if delta.strip() == "" and not current_token_indices:
+            current_token_indices = [i]
+
+    # flush last
+    if current_token_indices:
+        label = _clean_word_label_ws(current_raw)
+        if (not drop_empty) or (label != ""):
+            groups.append({
+                "label": label,
+                "raw": current_raw,
+                "token_indices": list(current_token_indices),
+            })
+
+    # Post-clean: merge empty labels if any slipped through
+    cleaned: List[Dict[str, Any]] = []
+    for g in groups:
+        lbl = _clean_word_label_ws(g.get("label", ""))
+        if drop_empty and lbl == "":
+            continue
+        g["label"] = lbl
+        cleaned.append(g)
+
+    return cleaned
+
+def aggregate_vector_by_groups(vec: List[float], groups: List[Dict[str, Any]]) -> List[float]:
+    v = [float(x) for x in (vec or [])]
+    out: List[float] = []
+    for g in (groups or []):
+        s = 0.0
+        for idx in g.get("token_indices", []):
+            try:
+                ii = int(idx)
+            except Exception:
+                continue
+            if 0 <= ii < len(v):
+                s += float(v[ii])
+        out.append(float(s))
+    return out
+
+def aggregate_matrix_rows_by_groups(mat: List[List[float]], row_groups: List[Dict[str, Any]]) -> List[List[float]]:
+    if mat is None or len(mat) == 0:
+        return []
+    n_cols = len(mat[0]) if isinstance(mat[0], list) else 0
+    out: List[List[float]] = []
+    for g in (row_groups or []):
+        acc = [0.0] * n_cols
+        for idx in g.get("token_indices", []):
+            try:
+                ii = int(idx)
+            except Exception:
+                continue
+            if 0 <= ii < len(mat):
+                row = mat[ii]
+                for c in range(n_cols):
+                    acc[c] += float(row[c])
+        out.append([float(x) for x in acc])
+    return out
+
+def build_hummusqa_qwen25_prompt_parts(question: str, options: list) -> Dict[str, Any]:
+    """
+    Restituisce le parti strutturate del prompt HumMusQA per Qwen2.5-Omni.
+
+    Struttura:
+      - prefix: scaffolding fisso NON perturbabile
+      - question: unico contenuto semantico perturbabile nel setup ufficiale
+      - options_block: contenuto SEMPRE fisso nel setup ufficiale
+      - suffix: scaffolding fisso NON perturbabile
+    """
+    q = str(question).strip()
+    opts = [str(x).strip() for x in (options or [])]
+
+    if len(opts) != 4 or any(x == "" for x in opts):
+        raise ValueError(f"Expected exactly 4 non-empty options, got: {opts}")
+
+    prefix = (
+        "You are a music audio understanding model.\n"
+        "Listen carefully to the provided audio clip. Answer the following multiple-choice\n"
+        "question based on what you hear.\n"
+        "Question:\n"
+    )
+
+    options_header = "Options:\n"
+    options_lines = [f"({chr(65+i)}) {opt}" for i, opt in enumerate(opts)]
+    options_block = "\n".join(options_lines)
+
+    suffix = (
+        "\nRespond with ONLY the letter of the correct option (A, B, C, or D).\n"
+        "Do not include any explanation or additional text."
+    )
+
+    return {
+        "prefix": prefix,
+        "question": q,
+        "options_header": options_header,
+        "options_lines": options_lines,
+        "options_block": options_block,
+        "suffix": suffix,
+    }
+
+def build_hummusqa_qwen25_prompt_from_parts(parts: Dict[str, Any]) -> str:
+    """
+    Ricompone il prompt completo da parti strutturate.
+    """
+    prefix = str(parts["prefix"])
+    question = str(parts["question"])
+    options_header = str(parts["options_header"])
+    options_block = str(parts["options_block"])
+    suffix = str(parts["suffix"])
+
+    return f"{prefix}{question}\n{options_header}{options_block}{suffix}"
+
+def build_hummusqa_qwen25_prompt(question: str, options: list) -> str:
+    """
+    Prompt completo allineato al formato HumMusQA / Qwen2.5-Omni.
+    Manteniamo questa funzione per backward compatibility.
+    """
+    parts = build_hummusqa_qwen25_prompt_parts(question, options)
+    return build_hummusqa_qwen25_prompt_from_parts(parts)
+
+def _find_subsequence(haystack: List[int], needle: List[int]) -> int:
+    """
+    Ritorna l'indice iniziale della prima occorrenza di needle in haystack.
+    Se non trovato, ritorna -1.
+    """
+    if not needle or not haystack:
+        return -1
+    n = len(needle)
+    m = len(haystack)
+    if n > m:
+        return -1
+
+    for i in range(m - n + 1):
+        if haystack[i:i + n] == needle:
+            return i
+    return -1
+
+
+def load_hummusqa_entries_parquet(dataset_root: str):
+    from datasets import load_dataset, Audio
+
+    parquet_files = []
+    for root, _dirs, files in os.walk(dataset_root):
+        for fn in files:
+            if fn.lower().endswith(".parquet"):
+                parquet_files.append(os.path.join(root, fn))
+
+    parquet_files = sorted(parquet_files)
+    if not parquet_files:
+        raise FileNotFoundError(f"No parquet files found under: {dataset_root}")
+
+    ds = load_dataset("parquet", data_files={"test": parquet_files})
+    split = ds["test"]
+
+    if "audio" in split.column_names:
+        split = split.cast_column("audio", Audio(decode=False))
+
+    entries = [dict(x) for x in split]
+    return entries, parquet_files
+
+def extract_only_question_text_span(prompt: str) -> tuple:
+    """
+    Estrae SOLO il testo della domanda dal prompt HumMusQA.
+
+    Ritorna:
+        (start_char, end_char) nel prompt string
+    """
+    q_start = prompt.find("Question:\n")
+    if q_start == -1:
+        raise RuntimeError("Cannot find 'Question:' in prompt")
+
+    q_start += len("Question:\n")
+
+    opt_start = prompt.find("Options:\n")
+    if opt_start == -1:
+        raise RuntimeError("Cannot find 'Options:' in prompt")
+
+    return q_start, opt_start
