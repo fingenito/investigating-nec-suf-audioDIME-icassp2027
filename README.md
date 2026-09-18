@@ -3,7 +3,9 @@
 <!-- TODO: arXiv badge once available, e.g.
 [![arXiv](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/XXXX.XXXXX)
 -->
-*Author list — TODO*
+arXiv still not available!
+
+*Flavio Ingenito, Luca Comanducci, Francesca Ronchini, Paolo Bestagini*
 
 <p align="center">
   <img src="./assets/audioDIMEpipe_w.png" width="80%"/>
@@ -19,6 +21,8 @@ Multimodal Interaction in Music-QA LLMs via audioDIME]()*, submitted to ICASSP 2
 - which dataset/task: HumMusQA, 4-option music question answering
 - one-sentence description of audioDIME as the tool used to answer it
 -->
+
+In this paper, we investigate how Large Audio Language Models (LALM) combine input modalities, audio and text, to generate a response. To do this, we propose audioDIME, an adaptation of the [DIME](https://arxiv.org/pdf/2203.02013) framework to the audio-musical domain, to disentangle unimodal contributions from multimodal interactions in [Qwen2.5-Omni-7B](https://arxiv.org/pdf/2503.20215) and [AudioFlamingo3](https://arxiv.org/pdf/2507.08128) on [HumMusQA](https://arxiv.org/pdf/2603.27877), and evaluate their necessity and sufficiency through masking.
 
 ## Method
 
@@ -39,15 +43,11 @@ Multimodal Interaction in Music-QA LLMs via audioDIME]()*, submitted to ICASSP 2
 
 ## Repository structure
 
-<!-- TODO: short tree + one-line description per folder, e.g.
-
-QA_analysis/
-├── utils/            core audioDIME/LIME implementation
-├── experiments/       Exp A (ranking) / Exp E (perturbations) base scripts
-├── paper/              Qwen2.5-Omni experiments (3 conditions)
-├── paper_af3/          Audio Flamingo 3 experiments (3 conditions)
-└── assets/             images used in this README
--->
+The repository is organised as follows:
+* `QA_analysis/utils` — the core audioDIME implementation: audio segmentation, masking, LIME surrogate fitting, and the GPU runners used to query the models.
+* `QA_analysis/experiments` — base scripts shared across all experiments: building the audioDIME ranking (Exp A) and running the masking-based perturbations used to compute necessity and sufficiency (Exp E).
+* `QA_analysis/paper` — experiments run on Qwen2.5-Omni, one subfolder per condition (complete, audio-only, text-only).
+* `QA_analysis/paper_af3` — the same three experiments run on Audio Flamingo 3.
 
 ## Setup
 
@@ -63,11 +63,7 @@ QA_analysis/
 
 ## Dataset
 
-<!-- TODO:
-- HumMusQA: where to get it, expected directory layout (parquet files)
-- any precomputed cache needed (e.g. demucs stem-separation cache) and how
-  to (re)generate it
--->
+We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, multiple-choice music questions (4 options each) paired with Creative-Commons-licensed audio from Jamendo. Questions were authored and validated by music theory experts specifically to require genuine listening, rather than being auto-generated from captions/tags — a known failure mode of prior music-QA datasets, which are often solvable by text-only models exploiting language priors alone. This makes HumMusQA particularly well-suited to our study: probing whether models actually need the audio, or can shortcut through text, is precisely the question our necessity/sufficiency analysis addresses. Questions span 13 musical categories (e.g. melody, harmony, instrumentation, cultural context) and 3 difficulty levels.
 
 ## Running the experiments
 
