@@ -21,3 +21,12 @@ QA_analysis/paper_af3/figures_suf_nec/
 # paper_af3/ lo importa. Non fa parte della pipeline che produce i
 # risultati del paper.
 QA_analysis/src/
+
+# Script di plotting: generano le figure da CSV gia' calcolati, non fanno
+# parte della pipeline sperimentale (Exp A/E) e non sono importati da nessun
+# altro file del progetto.
+QA_analysis/paper/build_qwen_modality_necessity_only.py
+QA_analysis/paper/build_suf_nec_combined_plots.py
+QA_analysis/paper/build_suf_nec_combined_row_plots.py
+QA_analysis/paper/build_suf_nec_plots.py
+QA_analysis/paper/build_suf_nec_plots_v2.py
