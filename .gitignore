@@ -1,3 +1,23 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Risultati grezzi degli esperimenti: troppo pesanti/voluminosi per GitHub,
+# restano solo in locale.
+QA_analysis/Results_paper/
+QA_analysis/Results_paper_af3/
+
+# Script di attention-knockout: esperimenti esplorativi non parte del paper.
+QA_analysis/paper/AttnKnock/
+QA_analysis/paper_af3/AttnKnock/
+
+# Figure generate: rigenerabili dagli script in paper/, non versionate.
+# Le sole immagini necessarie al README vivono in QA_analysis/assets/.
+QA_analysis/paper/figures_suf_nec/
+QA_analysis/paper_af3/figures_suf_nec/
+
+# Tool interattivo a singolo campione (menu da terminale), mescola dentro
+# MM-SHAP (non pertinente a questo paper); nessuno script di paper/ o
+# paper_af3/ lo importa. Non fa parte della pipeline che produce i
+# risultati del paper.
+QA_analysis/src/
