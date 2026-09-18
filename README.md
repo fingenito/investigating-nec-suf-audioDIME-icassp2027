@@ -14,32 +14,16 @@ arXiv still not available!
 This repository contains the code for *[Investigating Necessity and Sufficiency of
 Multimodal Interaction in Music-QA LLMs via audioDIME]()*, submitted to ICASSP 2027.
 
-<!-- TODO: one paragraph, plain language, no equations:
-- what question the paper asks (does the model really need both audio and text,
-  or is it guessing from one modality alone?)
-- which models: Qwen2.5-Omni and Audio Flamingo 3
-- which dataset/task: HumMusQA, 4-option music question answering
-- one-sentence description of audioDIME as the tool used to answer it
--->
 
 In this paper, we investigate how Large Audio Language Models (LALM) combine input modalities, audio and text, to generate a response. To do this, we propose audioDIME, an adaptation of the [DIME](https://arxiv.org/pdf/2203.02013) framework to the audio-musical domain, to disentangle unimodal contributions from multimodal interactions in [Qwen2.5-Omni-7B](https://arxiv.org/pdf/2503.20215) and [AudioFlamingo3](https://arxiv.org/pdf/2507.08128) on [HumMusQA](https://arxiv.org/pdf/2603.27877), and evaluate their necessity and sufficiency through masking.
 
 ## Method
 
-<!-- TODO: short explanation (no more than mamba-foley's own level of detail):
-- audioDIME in one paragraph: decomposes the model's answer into a unimodal
-  contribution per modality (UC_audio, UC_text) plus a multimodal interaction
-  term (MI), via LIME surrogates over audio segments / question words
-- necessity & sufficiency in one paragraph: progressively masking the top-k
-  ranked features and re-scoring the 4-option answer
-- the three conditions: complete / audio_only / text_only
--->
+For each sample, the model first generates its answer greedily, one token at a time. audioDIME explains the pre-softmax logit assigned to each generated token, splitting it into an audio-only contribution (`UC_audio`), a text-only contribution (`UC_text`), and a term capturing how the two modalities jointly interact (`MI`). Each contribution is perturbed and re-scored via teacher forcing, so the analysis isolates the effect of the input on that fixed token rather than on a newly generated one.
 
-<!-- TODO: second figure, e.g. qwen_suf_nec_combined_row (necessity+sufficiency
-     curves for one model, three conditions side by side) -->
-<p align="center">
-  <img src="./assets/results_overview.png" width="90%"/>
-</p>
+Feature importance within each contribution is estimated with LIME. Audio is split into 4 source stems (vocals, bass, drums, other) via Demucs, each further divided into onset-detected temporal segments, giving 32 audio features; text features are simply the individual words of the question. Each modality is perturbed independently — masked audio components are omitted and the result peak-renormalized, masked words are replaced with a placeholder token — and a Ridge-regularized linear surrogate is fit per feature source to obtain local importance scores.
+
+We then test whether the top-ranked features from each ranking (`UC_audio`, `UC_text`, `MI`) actually drive the model's answer, via two masking-based, chance-normalized metrics: *sufficiency* (keeping only the top-*k* features, does the model's confidence in its original answer hold?) and *necessity* (removing only the top-*k* features, does that confidence collapse?). Both are reported on a 0–1 scale, with a 0.5 threshold marking whether at least half of the model's confidence advantage over chance is preserved or lost.
 
 ## Repository structure
 
@@ -51,29 +35,58 @@ The repository is organised as follows:
 
 ## Setup
 
-<!-- TODO, mirroring mamba-foley's Setup section:
-1. git clone
-2. conda/venv env creation
-3. install torch/torchaudio/torchvision with the correct CUDA index (see
-   requirements.txt header)
-4. pip install -r requirements.txt
-5. note: transformers version differs for Qwen vs Audio Flamingo 3 (see
-   requirements.txt comments)
--->
+To get started, please prepare the code and python environment.
+
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/fingenito/investigating-nec-suf-audioDIME-icassp2027
+    cd ./investigating-nec-suf-audioDIME-icassp2027
+    ```
+
+2. Install the required dependencies by running the following commands:
+    ```bash
+    # (Optional) Create a conda virtual environment
+    conda create -n env-audiodime python=3.11
+    conda activate env-audiodime
+
+    # Install PyTorch first, choosing the appropriate CUDA version
+    pip install torch==2.6.0 torchaudio==2.6.0 torchvision==0.21.0 \
+        --index-url https://download.pytorch.org/whl/cu124
+
+    # Install the rest of the dependencies
+    pip install -r requirements.txt
+    ```
+
+    Note: Qwen2.5-Omni and Audio Flamingo 3 require different `transformers` versions — see the comments in `requirements.txt` for details.
 
 ## Dataset
 
-We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, multiple-choice music questions (4 options each) paired with Creative-Commons-licensed audio from Jamendo. Questions were authored and validated by music theory experts specifically to require genuine listening, rather than being auto-generated from captions/tags — a known failure mode of prior music-QA datasets, which are often solvable by text-only models exploiting language priors alone. This makes HumMusQA particularly well-suited to our study: probing whether models actually need the audio, or can shortcut through text, is precisely the question our necessity/sufficiency analysis addresses. Questions span 13 musical categories (e.g. melody, harmony, instrumentation, cultural context) and 3 difficulty levels.
+We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, multiple-choice music questions (4 options each) paired with Creative-Commons-licensed audio from Jamendo. Questions were authored and validated by music theory experts specifically to require genuine listening, rather than being auto-generated from captions/tags, a known failure mode of prior music-QA datasets, which are often solvable by text-only models exploiting language priors alone. This makes HumMusQA particularly well-suited to our study: probing whether models actually need the audio, or can shortcut through text, is precisely the question our necessity/sufficiency analysis addresses.
+
+You can download the dataset from [HuggingFace](https://huggingface.co/datasets/mtg-upf/HumMusQA).
 
 ## Running the experiments
 
-<!-- TODO, replaces mamba-foley's Inference/Training sections:
-### Exp A — building the audioDIME ranking
-  command(s) to run batch_exp_a.py for a given model/condition
-### Exp E — necessity & sufficiency curves
-  command(s) to run batch_exp_e.py, pointing --exp-a-dir at Exp A's output
-- table or list of the 6 (model x condition) combinations
--->
+> Before running anything, edit the hardcoded paths at the top of each script (`EXPERIMENT_RESULTS_ROOT`, model path, dataset root) to match your own environment.
+
+Each experiment has two stages: **Exp A** builds the audioDIME feature ranking, **Exp E** consumes it to compute necessity/sufficiency curves. Both models (Qwen2.5-Omni, Audio Flamingo 3) and all three conditions (complete, audio-only, text-only) follow the same two-stage pattern.
+
+1. Run Exp A for the model/condition you want, e.g. Qwen, complete condition:
+    ```bash
+    python -m QA_analysis.experiments.expA.batch_exp_a
+    ```
+    Other conditions/models use their own copy under `paper/` or `paper_af3/`, e.g.:
+    ```bash
+    python -m QA_analysis.paper_af3.Faithfulness_audio_only.batch_exp_a
+    ```
+    This writes a new `batch_run_XX` folder under `Results_paper/experiments/exp_A/` (or `Results_paper_af3/...`).
+
+2. Run Exp E, pointing `--exp-a-dir` at the `batch_run_XX` folder produced above:
+    ```bash
+    python -m QA_analysis.paper.Faithfulness_correct.batch_exp_e \
+        --exp-a-dir Results_paper/experiments/exp_A/batch_run_00
+    ```
+    This produces the necessity/sufficiency curves used to generate the paper's figures.
 
 ## Results
 
