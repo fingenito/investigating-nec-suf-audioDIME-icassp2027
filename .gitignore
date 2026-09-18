@@ -2,29 +2,27 @@ __pycache__/
 *.pyc
 .DS_Store
 
-# Risultati grezzi degli esperimenti: troppo pesanti/voluminosi per GitHub,
-# restano solo in locale.
+# Raw experiment outputs: too large/not useful on GitHub, stay local only.
 QA_analysis/Results_paper/
 QA_analysis/Results_paper_af3/
 
-# Script di attention-knockout: esperimenti esplorativi non parte del paper.
+# Attention-knockout scripts: exploratory experiments, not part of this paper.
 QA_analysis/paper/AttnKnock/
 QA_analysis/paper_af3/AttnKnock/
 
-# Figure generate: rigenerabili dagli script in paper/, non versionate.
-# Le sole immagini necessarie al README vivono in QA_analysis/assets/.
+# Generated figures: regenerable from the scripts in paper/, not versioned.
+# The few images needed for the README live in QA_analysis/assets/.
 QA_analysis/paper/figures_suf_nec/
 QA_analysis/paper_af3/figures_suf_nec/
 
-# Tool interattivo a singolo campione (menu da terminale), mescola dentro
-# MM-SHAP (non pertinente a questo paper); nessuno script di paper/ o
-# paper_af3/ lo importa. Non fa parte della pipeline che produce i
-# risultati del paper.
+# Interactive single-sample tool (terminal menu) that also drives MM-SHAP
+# (unrelated to this paper); not imported anywhere in paper/ or paper_af3/.
+# Not part of the pipeline that produces the paper's results.
 QA_analysis/src/
 
-# Script di plotting: generano le figure da CSV gia' calcolati, non fanno
-# parte della pipeline sperimentale (Exp A/E) e non sono importati da nessun
-# altro file del progetto.
+# Plotting scripts: generate figures from already-computed CSVs, not part
+# of the experimental pipeline (Exp A/E), and not imported by any other
+# file in the project.
 QA_analysis/paper/build_qwen_modality_necessity_only.py
 QA_analysis/paper/build_suf_nec_combined_plots.py
 QA_analysis/paper/build_suf_nec_combined_row_plots.py

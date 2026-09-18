@@ -1,13 +1,13 @@
-# Versioni verificate sugli ambienti conda usati per produrre i risultati
-# del paper (env_ing_1 = Qwen2.5-Omni, env_ing_af3 = Audio Flamingo 3).
+# Versions verified against the conda environments used to produce the
+# paper's results (env_ing_1 = Qwen2.5-Omni, env_ing_af3 = Audio Flamingo 3).
 #
-# 1) Installa PRIMA torch/torchaudio/torchvision con l'indice CUDA corretto
-#    (qui: cu124), altrimenti l'indice PyPI di default puo' risolvere una
-#    build CPU-only o una versione CUDA diversa:
+# 1) Install torch/torchaudio/torchvision FIRST with the correct CUDA index
+#    (here: cu124), otherwise the default PyPI index may resolve a CPU-only
+#    build or a different CUDA version:
 #      pip install torch==2.6.0 torchaudio==2.6.0 torchvision==0.21.0 \
 #          --index-url https://download.pytorch.org/whl/cu124
 #
-# 2) Poi installa il resto:
+# 2) Then install the rest:
 #      pip install -r requirements.txt
 
 numpy==2.3.5
@@ -22,32 +22,33 @@ demucs==4.0.0
 datasets==4.1.1
 qwen-omni-utils==0.0.9
 
-# Trascinati come dipendenze "hard" da QA_analysis/utils/analysis_1.py e
-# analysis_2.py (import diretti, non in try/except, di visualization.py e
-# mmshap_utils.py) anche se MM-SHAP non fa parte della pipeline del paper.
+# Pulled in as hard dependencies by QA_analysis/utils/analysis_1.py and
+# analysis_2.py (direct imports, not wrapped in try/except, of
+# visualization.py and mmshap_utils.py) even though MM-SHAP is not part of
+# this paper's pipeline.
 matplotlib==3.10.7
 shap==0.50.0
 
-# Per Qwen2.5-Omni (Qwen2_5OmniProcessor, Qwen2_5OmniThinkerForConditionalGeneration).
+# For Qwen2.5-Omni (Qwen2_5OmniProcessor, Qwen2_5OmniThinkerForConditionalGeneration).
 transformers==4.52.3
-# Per Audio Flamingo 3 (AudioFlamingo3ForConditionalGeneration), invece,
-# questa versione da PyPI NON basta: al momento in cui questi esperimenti
-# sono stati lanciati, il supporto ad AF3 non era ancora in nessuna release
-# stabile. Per riprodurre gli esperimenti AF3, DOPO aver installato questo
-# file, sovrascrivi transformers con lo stesso commit usato in produzione:
+# For Audio Flamingo 3 (AudioFlamingo3ForConditionalGeneration), however,
+# this PyPI version is NOT enough: when these experiments were run, AF3
+# support was not yet in any stable release. To reproduce the AF3
+# experiments, AFTER installing this file, overwrite transformers with the
+# exact commit used in production:
 #   pip install "transformers @ git+https://github.com/huggingface/transformers@17044fa59a3acadaafb56de1489b4699432315bb"
 
-# Necessario per Qwen: QA_analysis/utils/gpu_utils.py forza
-# attn_implementation="flash_attention_2" SENZA fallback (il worker fallisce
-# se manca). Per AF3 e' invece opzionale: gpu_utils_af3.py prova
-# flash_attention_2 -> sdpa -> eager in cascata.
-# La build da sorgente richiede una toolchain CUDA/nvcc compatibile e puo'
-# essere lenta; in produzione e' stata usata questa wheel precompilata
-# (cu12 / torch2.6 / cp311 / Linux x86_64):
+# Required for Qwen: QA_analysis/utils/gpu_utils.py hardcodes
+# attn_implementation="flash_attention_2" with NO fallback (the worker fails
+# if it's missing). For AF3 it is instead optional: gpu_utils_af3.py tries
+# flash_attention_2 -> sdpa -> eager in cascade.
+# Building from source requires a compatible CUDA/nvcc toolchain and can be
+# slow; production used this precompiled wheel (cu12 / torch2.6 / cp311 /
+# Linux x86_64):
 #   pip install flash_attn@https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.6cxx11abiFALSE-cp311-cp311-linux_x86_64.whl
 flash-attn==2.7.4.post1
 
-# Opzionale: silenzia solo i log rumorosi di TensorFlow/absl. Importato
-# dentro try/except in paper*/Faithfulness_*/batch_exp_*.py: il codice
-# funziona anche senza.
+# Optional: only silences noisy TensorFlow/absl logs. Imported inside
+# try/except in paper*/Faithfulness_*/batch_exp_*.py: the code works fine
+# without it.
 absl-py==2.3.1
