@@ -5,9 +5,8 @@
 -->
 *Author list — TODO*
 
-<!-- TODO: hero figure, e.g. the audioDIME pipeline diagram (Exp A -> Exp E) -->
 <p align="center">
-  <img src="./assets/pipeline_overview.png" width="80%"/>
+  <img src="./assets/audioDIMEpipe.png" width="80%"/>
 </p>
 
 This repository contains the code for *[Investigating Necessity and Sufficiency of
