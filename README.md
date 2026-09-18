@@ -6,7 +6,7 @@
 *Author list — TODO*
 
 <p align="center">
-  <img src="./assets/audioDIMEpipe.png" width="80%"/>
+  <img src="./assets/audioDIMEpipe_w.png" width="80%"/>
 </p>
 
 This repository contains the code for *[Investigating Necessity and Sufficiency of
