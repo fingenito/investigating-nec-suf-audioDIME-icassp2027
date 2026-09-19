@@ -69,17 +69,13 @@ You can download the dataset from [HuggingFace](https://huggingface.co/datasets/
 
 > Before running anything, edit the hardcoded paths at the top of each script (`EXPERIMENT_RESULTS_ROOT`, model path, dataset root) to match your own environment.
 
-Each experiment has two stages: **Exp A** builds the audioDIME feature ranking, **Exp E** consumes it to compute necessity/sufficiency curves. Both models (Qwen2.5-Omni, Audio Flamingo 3) and all three conditions (complete, audio-only, text-only) follow the same two-stage pattern.
+Each experiment has two stages: **Exp A** builds the audioDIME feature ranking, **Exp E** consumes it to compute necessity/sufficiency curves. Every combination of model (Qwen2.5-Omni, Audio Flamingo 3) and condition (complete, audio-only, text-only) has its own self-contained folder — `paper/Faithfulness_correct`, `paper/Faithfulness_audio_only`, `paper/Faithfulness_text_only` for Qwen, and the same three under `paper_af3/` for Audio Flamingo 3 — each with its own `batch_exp_a.py` and `batch_exp_e.py`. The commands below use the complete condition on Qwen as an example; the other five combinations follow the same pattern, just pointing at their own folder.
 
-1. Run Exp A for the model/condition you want, e.g. Qwen, complete condition:
+1. Run Exp A:
     ```bash
-    python -m QA_analysis.experiments.expA.batch_exp_a
+    python -m QA_analysis.paper.Faithfulness_correct.batch_exp_a
     ```
-    Other conditions/models use their own copy under `paper/` or `paper_af3/`, e.g.:
-    ```bash
-    python -m QA_analysis.paper_af3.Faithfulness_audio_only.batch_exp_a
-    ```
-    This writes a new `batch_run_XX` folder under `Results_paper/experiments/exp_A/` (or `Results_paper_af3/...`).
+    This writes a new `batch_run_XX` folder under `Results_paper/experiments/exp_A/` (or `Results_paper_af3/...` for Audio Flamingo 3).
 
 2. Run Exp E, pointing `--exp-a-dir` at the `batch_run_XX` folder produced above:
     ```bash
