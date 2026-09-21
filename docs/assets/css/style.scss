@@ -8,3 +8,28 @@
   margin: 0 auto;
   padding: 2rem;
 }
+
+.wsplayer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: middle;
+}
+
+.wsplayer-btn {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #9aa5ab;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+}
+
+.wsplayer-wave {
+  flex: 1 1 auto;
+  min-width: 0;
+}
