@@ -102,3 +102,80 @@ For samples where the model's original prediction was correct, we compare suffic
   <br/>
   <em>Audio Flamingo 3 — text-only condition.</em>
 </p>
+
+### Audio Segmentation Example
+
+To verify that the onset-guided segmentation actually produces meaningful, source-specific audio events rather than arbitrary chunks, this section lets you listen to the full segmentation pipeline on one example sample from HumMusQA. The original waveform is first separated into 4 stems (bass, drums, other, vocals) using Demucs; each stem is then split into temporal segments guided by onset detection, giving 4 stems &times; 8 segments = 32 source-segment audio features.
+
+<p align="center">
+  <audio controls style="width: 320px;"><source src="assets/audio/sample_01/originale.wav" type="audio/wav"></audio>
+</p>
+<p align="center"><em>Original audio (HumMusQA sample).</em></p>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 10px;">
+  <div style="text-align: center;">
+    <div>Bass</div>
+    <audio controls style="width: 180px;"><source src="assets/audio/sample_01/stem_bass.wav" type="audio/wav"></audio>
+  </div>
+  <div style="text-align: center;">
+    <div>Drums</div>
+    <audio controls style="width: 180px;"><source src="assets/audio/sample_01/stem_drums.wav" type="audio/wav"></audio>
+  </div>
+  <div style="text-align: center;">
+    <div>Other</div>
+    <audio controls style="width: 180px;"><source src="assets/audio/sample_01/stem_other.wav" type="audio/wav"></audio>
+  </div>
+  <div style="text-align: center;">
+    <div>Vocals</div>
+    <audio controls style="width: 180px;"><source src="assets/audio/sample_01/stem_vocals.wav" type="audio/wav"></audio>
+  </div>
+</div>
+<p align="center"><em>The four stems separated with Demucs: bass, drums, other, vocals.</em></p>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px;">
+  <div style="text-align: center;">
+    <div>Bass</div>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_01_bass_seg0.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_05_bass_seg1.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_09_bass_seg2.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_13_bass_seg3.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_17_bass_seg4.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_21_bass_seg5.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_25_bass_seg6.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_29_bass_seg7.wav" type="audio/wav"></audio>
+  </div>
+  <div style="text-align: center;">
+    <div>Drums</div>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_00_drums_seg0.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_04_drums_seg1.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_08_drums_seg2.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_12_drums_seg3.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_16_drums_seg4.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_20_drums_seg5.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_24_drums_seg6.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_28_drums_seg7.wav" type="audio/wav"></audio>
+  </div>
+  <div style="text-align: center;">
+    <div>Other</div>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_02_other_seg0.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_06_other_seg1.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_10_other_seg2.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_14_other_seg3.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_18_other_seg4.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_22_other_seg5.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_26_other_seg6.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_30_other_seg7.wav" type="audio/wav"></audio>
+  </div>
+  <div style="text-align: center;">
+    <div>Vocals</div>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_03_vocals_seg0.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_07_vocals_seg1.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_11_vocals_seg2.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_15_vocals_seg3.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_19_vocals_seg4.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_23_vocals_seg5.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_27_vocals_seg6.wav" type="audio/wav"></audio>
+    <audio controls style="width: 100px;"><source src="assets/audio/sample_01/segmento_31_vocals_seg7.wav" type="audio/wav"></audio>
+  </div>
+</div>
+<p align="center"><em>The 32 source-segment audio features obtained after onset-guided segmentation (4 stems &times; 8 temporal segments, in chronological order within each stem).</em></p>
