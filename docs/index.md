@@ -107,7 +107,7 @@ For samples where the model's original prediction was correct, we compare suffic
 
 To verify that the onset-guided segmentation actually produces meaningful, source-specific audio events rather than arbitrary chunks, this section lets you listen to the full segmentation pipeline on one example sample from HumMusQA. The original waveform is first separated into 4 stems (bass, drums, other, vocals) using Demucs; each stem is then split into temporal segments guided by onset detection, giving 4 stems &times; 8 segments = 32 source-segment audio features.
 
-<p>The waveform below each clip shows where in the (silent-padded) audio the segment actually has content — you can see at a glance that each segment lines up with a real, localized event, and click directly on the visible waveform to jump there.</p>
+<p>The waveform below each clip shows where in the (silent-padded) audio the segment actually has content. You can see at a glance that each segment lines up with a real, localized event, and you can click directly on the visible waveform to jump there.</p>
 
 <p align="center">
   <span class="wsplayer" data-wsplayer data-src="assets/audio/sample_01/originale.wav" style="width: 320px;">
