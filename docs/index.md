@@ -75,6 +75,13 @@ For samples where the model's original prediction was correct, we compare suffic
   <em>Qwen2.5-Omni — audio-only condition.</em>
 </p>
 
+- Qwen2.5-Omni, text-only condition
+<p align="center">
+  <img src="assets/img/qwen_text_only_modality_diagnosis.png" width="55%"/>
+  <br/>
+  <em>Qwen2.5-Omni — text-only condition.</em>
+</p>
+
 - Audio Flamingo 3, complete condition
 <p align="center">
   <img src="assets/img/af3_complete_modality_diagnosis.png" width="55%"/>
