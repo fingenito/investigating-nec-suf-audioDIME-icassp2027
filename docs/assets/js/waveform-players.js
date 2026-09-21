@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
       barWidth: 2,
       barGap: 1,
       barRadius: 1,
-      normalize: true,
+      normalize: false,
     });
 
     btn.addEventListener("click", function () {
