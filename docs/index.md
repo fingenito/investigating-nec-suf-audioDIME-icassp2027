@@ -11,4 +11,20 @@ Audio LLMs have advanced music understanding, yet how they combine audio and tex
 
 ## Additional material
 
-<!-- TODO -->
+### <!-- TODO -->
+
+<p align="center">
+  <img src="assets/img/qwen_audio_only_mi_by_correctness.png" width="90%"/>
+</p>
+
+<p align="center">
+  <img src="assets/img/qwen_text_only_mi_by_correctness.png" width="90%"/>
+</p>
+
+<p align="center">
+  <img src="assets/img/af3_audio_only_mi_by_correctness.png" width="90%"/>
+</p>
+
+<p align="center">
+  <img src="assets/img/af3_text_only_mi_by_correctness.png" width="90%"/>
+</p>
