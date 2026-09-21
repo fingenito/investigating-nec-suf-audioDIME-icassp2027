@@ -29,7 +29,7 @@ We then test whether the top-ranked features from each ranking (`UC_audio`, `UC_
 
 The repository is organised as follows:
 * `QA_analysis/utils` — the core audioDIME implementation: audio segmentation, masking, LIME surrogate fitting, and the GPU runners used to query the models.
-* `QA_analysis/experiments` — base scripts shared across all experiments: building the audioDIME ranking (Exp A) and running the masking-based perturbations used to compute necessity and sufficiency (Exp E).
+* `QA_analysis/experiments` — base scripts shared across experiments: running the masking-based perturbations used to compute necessity and sufficiency (Exp E).
 * `QA_analysis/paper` — experiments run on Qwen2.5-Omni, one subfolder per condition (complete, audio-only, text-only).
 * `QA_analysis/paper_af3` — the same three experiments run on Audio Flamingo 3.
 
