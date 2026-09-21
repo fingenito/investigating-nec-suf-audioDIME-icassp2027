@@ -84,11 +84,6 @@ Each experiment has two stages: **Exp A** builds the audioDIME feature ranking, 
     ```
     This produces the necessity/sufficiency curves used to generate the paper's figures.
 
-## Results
-
-<!-- TODO: 2-3 bullet points on the main findings, pointing to the figures in
-     assets/; link to the paper once available -->
-
 ## Citation
 
 <!-- TODO: bibtex, once the paper has a public entry (arXiv/ICASSP proceedings) -->
