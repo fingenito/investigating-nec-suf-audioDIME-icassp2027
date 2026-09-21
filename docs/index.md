@@ -56,3 +56,42 @@ For each sample, sufficiency measures whether the top-ranked MI (multimodal inte
   <br/>
   <em>Audio Flamingo 3 — text-only condition.</em>
 </p>
+
+### Modality Diagnosis
+
+For samples where the model's original prediction was correct, we compare sufficiency and necessity across the three feature sources: `UC_text`, `UC_audio`, and `MI`.
+
+- Qwen2.5-Omni, complete condition
+<p align="center">
+  <img src="assets/img/qwen_complete_modality_diagnosis.png" width="55%"/>
+  <br/>
+  <em>Qwen2.5-Omni — complete condition.</em>
+</p>
+
+- Qwen2.5-Omni, audio-only condition
+<p align="center">
+  <img src="assets/img/qwen_audio_only_modality_diagnosis.png" width="55%"/>
+  <br/>
+  <em>Qwen2.5-Omni — audio-only condition.</em>
+</p>
+
+- Audio Flamingo 3, complete condition
+<p align="center">
+  <img src="assets/img/af3_complete_modality_diagnosis.png" width="55%"/>
+  <br/>
+  <em>Audio Flamingo 3 — complete condition.</em>
+</p>
+
+- Audio Flamingo 3, audio-only condition
+<p align="center">
+  <img src="assets/img/af3_audio_only_modality_diagnosis.png" width="55%"/>
+  <br/>
+  <em>Audio Flamingo 3 — audio-only condition.</em>
+</p>
+
+- Audio Flamingo 3, text-only condition
+<p align="center">
+  <img src="assets/img/af3_text_only_modality_diagnosis.png" width="55%"/>
+  <br/>
+  <em>Audio Flamingo 3 — text-only condition.</em>
+</p>
