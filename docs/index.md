@@ -11,6 +11,11 @@ Audio LLMs have advanced music understanding, yet how they combine audio and tex
 
 ## Additional material
 
+Due to space constraints, the paper only reports sufficiency/necessity results for the complete condition of both models. In the following we report the extended results for all conditions, together with a worked example verifying the audio segmentation itself. Specifically, we present:
+- Sufficiency and necessity of `MI`, split by prediction correctness, for all 6 combinations of model (Qwen2.5-Omni, Audio Flamingo 3) and condition (complete, audio-only, text-only).
+- The same breakdown across `UC_text`, `UC_audio`, and `MI` (modality diagnosis), for correct predictions only, again for all 6 combinations.
+- A worked example of the onset-guided audio segmentation on one HumMusQA sample, to demonstrate that the resulting segments are meaningful and correctly localized in time.
+
 ### Sufficiency & Necessity of MI
 
 For each sample, sufficiency measures whether the top-ranked MI (multimodal interaction) features alone preserve the model's confidence in its original answer, while necessity measures whether removing them destroys that confidence, both normalized against chance level. Results are reported separately for samples where the model's original prediction was correct or incorrect.
