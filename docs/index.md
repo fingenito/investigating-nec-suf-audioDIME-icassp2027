@@ -52,7 +52,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-<h3 align="center">Text_only condition</h3>
+<h4 align="center">Text_only condition</h4>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -67,7 +67,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-<h3 align="center">Audio_only condition</h3>
+<h4 align="center">Audio_only condition</h4>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
