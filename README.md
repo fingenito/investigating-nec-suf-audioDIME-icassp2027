@@ -58,11 +58,11 @@ To get started, please prepare the code and python environment.
     pip install -r requirements.txt
     ```
 
-    Note: Qwen2.5-Omni and Audio Flamingo 3 require different `transformers` versions — see the comments in `requirements.txt` for details.
+    Note: Qwen2.5-Omni and Audio Flamingo 3 require different `transformers` versions; see the comments in `requirements.txt` for details.
 
 ## Dataset
 
-We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, four-option multiple-choice music questions paired with Creative-Commons-licensed audio from Jamendo. The questions were authored and validated by music-theory experts to require listening, rather than being automatically generated from captions or tags—a limitation of prior music-QA datasets that can allow text-only models to exploit language priors. HumMusQA is therefore well suited to our study, which tests whether models rely on the audio or can answer through textual shortcuts.
+We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, four-option multiple-choice music questions paired with Creative-Commons-licensed audio from Jamendo. The questions were authored and validated by music theory experts to require listening, rather than being automatically generated from captions or tags, a limitation of prior music-QA datasets that can allow text-only models to exploit language priors. HumMusQA is therefore well suited to our study, which tests whether models rely on the audio or can answer through textual shortcuts.
 
 You can download the dataset from [HuggingFace](https://huggingface.co/datasets/mtg-upf/HumMusQA).
 
@@ -70,7 +70,7 @@ You can download the dataset from [HuggingFace](https://huggingface.co/datasets/
 
 > Before running anything, edit the hardcoded paths at the top of each script (`EXPERIMENT_RESULTS_ROOT`, model path, dataset root) to match your own environment.
 
-Each experiment has two stages: **Exp A** builds the audioDIME feature ranking, **Exp E** consumes it to compute necessity/sufficiency curves. Every combination of model (Qwen2.5-Omni, Audio Flamingo 3) and condition (complete, audio-only, text-only) has its own self-contained folder — `paper/Faithfulness_correct`, `paper/Faithfulness_audio_only`, `paper/Faithfulness_text_only` for Qwen, and the same three under `paper_af3/` for Audio Flamingo 3 — each with its own `batch_exp_a.py` and `batch_exp_e.py`. The commands below use the complete condition on Qwen as an example; the other five combinations follow the same pattern, just pointing at their own folder.
+Each experiment has two stages: **Exp A** builds the audioDIME feature ranking, **Exp E** consumes it to compute necessity/sufficiency curves. Every combination of model (Qwen2.5-Omni, Audio Flamingo 3) and condition (complete, audio-only, text-only) has its own self-contained folder, `paper/Faithfulness_correct`, `paper/Faithfulness_audio_only`, `paper/Faithfulness_text_only` for Qwen, and the same three under `paper_af3/` for Audio Flamingo 3, each with its own `batch_exp_a.py` and `batch_exp_e.py`. The commands below use the complete condition on Qwen as an example; the other five combinations follow the same pattern, just pointing at their own folder.
 
 1. Run Exp A:
     ```bash
