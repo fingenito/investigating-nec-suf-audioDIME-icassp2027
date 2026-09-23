@@ -62,7 +62,7 @@ To get started, please prepare the code and python environment.
 
 ## Dataset
 
-We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, multiple-choice music questions (4 options each) paired with Creative-Commons-licensed audio from Jamendo. Questions were authored and validated by music theory experts specifically to require genuine listening, rather than being auto-generated from captions/tags, a known failure mode of prior music-QA datasets, which are often solvable by text-only models exploiting language priors alone. This makes HumMusQA particularly well-suited to our study: probing whether models actually need the audio, or can shortcut through text, is precisely the question our necessity/sufficiency analysis addresses.
+We use [HumMusQA](https://arxiv.org/pdf/2603.27877), a benchmark of 320 expert-written, four-option multiple-choice music questions paired with Creative-Commons-licensed audio from Jamendo. The questions were authored and validated by music-theory experts to require listening, rather than being automatically generated from captions or tags—a limitation of prior music-QA datasets that can allow text-only models to exploit language priors. HumMusQA is therefore well suited to our study, which tests whether models rely on the audio or can answer through textual shortcuts.
 
 You can download the dataset from [HuggingFace](https://huggingface.co/datasets/mtg-upf/HumMusQA).
 
