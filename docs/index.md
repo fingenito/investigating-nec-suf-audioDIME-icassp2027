@@ -12,7 +12,7 @@ standard attribution methods do not test whether attributed features are necessa
 
 ## Additional Material
 
-Due to space constraints, the paper reports sufficiency and necessity results only for the complete condition of both models. Here, we provide the extended results for all conditions, together with a worked example that verifies the audio segmentation. Specifically, we present:
+Due to space constraints, the paper reports sufficiency and necessity results only for the complete condition of both models. Here, we provide the extended results for all conditions, together with a worked example that illustrates the audio segmentation. Specifically, we present:
 
 - Sufficiency and necessity of `MI`, split by prediction correctness, for all six combinations of model (Qwen2.5-Omni and AudioFlamingo3) and condition (complete, audio-only, and text-only).
 - The same breakdown for `UC_text`, `UC_audio`, and `MI` (modality diagnosis), considering correct predictions only, again for all six combinations.
@@ -125,7 +125,7 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
 <p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: The Qwen2.5-Omni y-axis extends to 1.4 rather than 1.0 because <code>UC_text</code> sufficiency exceeds 1.0 under this condition. This can occur under chance-normalized scoring when the retained features yield confidence higher than that of the original prediction; limiting the axis to 1.0 would clip these values.</em></p>
 
 
-<h4 align="center">Audio-only condition</h4> 
+<h4 align="center">Audio-only Condition</h4> 
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
