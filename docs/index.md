@@ -18,7 +18,7 @@ Due to space constraints, the paper only reports sufficiency/necessity results f
 - The same breakdown across `UC_text`, `UC_audio`, and `MI` (modality diagnosis), for correct predictions only, again for all 6 combinations.
 - A worked example of the onset-guided audio segmentation on one HumMusQA sample, to demonstrate that the resulting segments are meaningful and correctly localized in time.
 
-Samples with $p_{orig} < 0.40$ are excluded from every curve above, since the normalization denominator would otherwise be too small and unstable. The table below reports, out of 320 samples, how many remain after this filter for each model/condition, split by whether the model's original prediction was correct, to make the effective sample size behind each curve explicit.
+Samples with <em>p<sub>orig</sub></em> &lt; 0.40 are excluded from every curve above, since the normalization denominator would otherwise be too small and unstable. The table below reports, out of 320 samples, how many remain after this filter for each model/condition, split by whether the model's original prediction was correct, to make the effective sample size behind each curve explicit.
 
 | Model | Condition | Remaining | Correct | Incorrect |
 |---|---|---|---|---|
