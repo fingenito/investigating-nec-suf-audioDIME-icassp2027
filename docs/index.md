@@ -59,7 +59,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-<h4 align="center">Text-only condition</h4>
+<h4 align="center">Text-only Condition</h4>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -74,7 +74,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-<h4 align="center">Audio-only condition</h4>
+<h4 align="center">Audio-only Condition</h4>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -108,7 +108,7 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
   </div>
 </div>
 
-<h4 align="center">Text-only condition</h4> 
+<h4 align="center">Text-only Condition</h4> 
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -143,7 +143,7 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
 
 ### Audio Segmentation Example
 
-To verify that onset-guided segmentation yields meaningful, source-specific audio events rather than arbitrary chunks, this section provides an interactive example from HumMusQA. The original waveform is first separated into four stems (bass, drums, other, and vocals) using Demucs. Each stem is then divided into temporally localized segments guided by onset detection, resulting in 4 stems × 8 segments = 32 source-segment audio features.
+To illustrate that onset-guided segmentation yields meaningful, source-specific audio events rather than arbitrary chunks, this section provides an interactive example from HumMusQA. The original waveform is first separated into four stems (bass, drums, other, and vocals) using Demucs. Each stem is then divided into temporally localized segments guided by onset detection, resulting in 4 stems × 8 segments = 32 source-segment audio features.
 
 The waveform shown below each clip indicates where the segment contains audio within the silence-padded signal. Each segment corresponds to a localized event, and you can click directly on the visible waveform to jump to it.
 
