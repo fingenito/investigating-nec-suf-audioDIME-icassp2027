@@ -63,12 +63,12 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
-    <img src="assets/img/qwen_audio_only_mi_by_correctness.png" style="width: 100%;"/>
+    <img src="assets/img/qwen_text_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
     <em>Qwen2.5-Omni</em>
   </div>
   <div style="text-align: center; width: 47%;">
-    <img src="assets/img/af3_audio_only_mi_by_correctness.png" style="width: 100%;"/>
+    <img src="assets/img/af3_text_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
     <em>AudioFlamingo3</em>
   </div>
@@ -78,12 +78,12 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
-    <img src="assets/img/qwen_text_only_mi_by_correctness.png" style="width: 100%;"/>
+    <img src="assets/img/qwen_audio_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
     <em>Qwen2.5-Omni</em>
   </div>
   <div style="text-align: center; width: 47%;">
-    <img src="assets/img/af3_text_only_mi_by_correctness.png" style="width: 100%;"/>
+    <img src="assets/img/af3_audio_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
     <em>AudioFlamingo3</em>
   </div>
