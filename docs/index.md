@@ -5,6 +5,8 @@ title: "Investigating Necessity and Sufficiency of Multimodal Interaction in Mus
 
 Accompanying website to the paper _Investigating Necessity and Sufficiency of Multimodal Interaction in Music-QA LLMs via audioDIME_, submitted to ICASSP 2027.
 
+Flavio Ingenito, Luca Comanducci, Francesca Ronchini, Paolo Bestagini
+
 ## Abstract
 
 Audio LLMs have advanced music understanding, yet how they combine audio and text remains unclear, and standard attribution cannot distinguish correlation from causal reliance. We adapt DIME to disentangle unimodal contributions from multimodal interactions in Qwen2.5-Omni-7B and AudioFlamingo3 on HumMusQA, and evaluate their necessity and sufficiency through masking. Across both models, audio's unimodal contribution is often sufficient but rarely necessary, whereas interaction features have substantially higher necessity and, under complete input, approach text contributions. These results suggest that audio primarily influences predictions through its interaction with the question rather than as an independent decision signal.
@@ -15,6 +17,17 @@ Due to space constraints, the paper only reports sufficiency/necessity results f
 - Sufficiency and necessity of `MI`, split by prediction correctness, for all 6 combinations of model (Qwen2.5-Omni, Audio Flamingo 3) and condition (complete, audio-only, text-only).
 - The same breakdown across `UC_text`, `UC_audio`, and `MI` (modality diagnosis), for correct predictions only, again for all 6 combinations.
 - A worked example of the onset-guided audio segmentation on one HumMusQA sample, to demonstrate that the resulting segments are meaningful and correctly localized in time.
+
+Samples with $p_{orig} < 0.40$ are excluded from every curve above, since the normalization denominator would otherwise be too small and unstable. The table below reports, out of 320 samples, how many remain after this filter for each model/condition, split by whether the model's original prediction was correct, to make the effective sample size behind each curve explicit.
+
+| Model | Condition | Remaining | Correct | Incorrect |
+|---|---|---|---|---|
+| Qwen2.5-Omni | Complete | 300 | 192 | 108 |
+| Qwen2.5-Omni | Audio-only | 270 | 120 | 150 |
+| Qwen2.5-Omni | Text-only | 283 | 100 | 183 |
+| Audio Flamingo 3 | Complete | 300 | 204 | 96 |
+| Audio Flamingo 3 | Audio-only | 283 | 175 | 108 |
+| Audio Flamingo 3 | Text-only | 290 | 167 | 123 |
 
 ### Sufficiency & Necessity of MI
 
