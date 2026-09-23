@@ -20,18 +20,25 @@ Due to space constraints, the paper reports sufficiency and necessity results on
 
 Samples with <em>p<sub>orig</sub></em> &lt; 0.40 are excluded from every curve, as the normalization denominator would otherwise be too small and unstable. The table below reports, out of 320 samples, how many remain after this filter for each model and condition, split according to whether the model's original prediction was correct. This makes the effective sample size behind each curve explicit.
 
-<div align="center">
-
-| Model | Condition | Remaining | Correct | Incorrect |
-|:---|:---|---:|---:|---:|
-| Qwen2.5-Omni | Complete | 300 | 192 | 108 |
-| Qwen2.5-Omni | Audio-only | 270 | 120 | 150 |
-| Qwen2.5-Omni | Text-only | 283 | 100 | 183 |
-| AudioFlamingo3 | Complete | 300 | 204 | 96 |
-| AudioFlamingo3 | Audio-only | 283 | 175 | 108 |
-| AudioFlamingo3 | Text-only | 290 | 167 | 123 |
-
-</div>
+<table align="center">
+  <thead>
+    <tr>
+      <th align="left">Model</th>
+      <th align="left">Condition</th>
+      <th align="right">Remaining</th>
+      <th align="right">Correct</th>
+      <th align="right">Incorrect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Qwen2.5-Omni</td><td>Complete</td><td align="right">300</td><td align="right">192</td><td align="right">108</td></tr>
+    <tr><td>Qwen2.5-Omni</td><td>Audio-only</td><td align="right">270</td><td align="right">120</td><td align="right">150</td></tr>
+    <tr><td>Qwen2.5-Omni</td><td>Text-only</td><td align="right">283</td><td align="right">100</td><td align="right">183</td></tr>
+    <tr><td>AudioFlamingo3</td><td>Complete</td><td align="right">300</td><td align="right">204</td><td align="right">96</td></tr>
+    <tr><td>AudioFlamingo3</td><td>Audio-only</td><td align="right">283</td><td align="right">175</td><td align="right">108</td></tr>
+    <tr><td>AudioFlamingo3</td><td>Text-only</td><td align="right">290</td><td align="right">167</td><td align="right">123</td></tr>
+  </tbody>
+</table>
 
 ### Sufficiency & Necessity of MI
 
