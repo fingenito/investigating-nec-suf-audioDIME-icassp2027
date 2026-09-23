@@ -3,9 +3,7 @@ layout: default
 title: "Investigating Necessity and Sufficiency of Multimodal Interaction in Music-QA LLMs via audioDIME"
 ---
 
-Accompanying website to the paper _Investigating Necessity and Sufficiency of Multimodal Interaction in Music-QA LLMs via audioDIME_, submitted to ICASSP 2027.
-
-Flavio Ingenito, Luca Comanducci, Francesca Ronchini, Paolo Bestagini
+Accompanying website to the paper _Investigating Necessity and Sufficiency of Multimodal Interaction in Music-QA LLMs via audioDIME_, by _Flavio Ingenito, Luca Comanducci, Francesca Ronchini, Paolo Bestagini_, submitted to ICASSP 2027.
 
 ## Abstract
 
