@@ -5,12 +5,12 @@ title: "Investigating Necessity and Sufficiency of Multimodal Interaction in Mus
 
 Accompanying website to the paper _Investigating Necessity and Sufficiency of Multimodal Interaction in Music-QA LLMs via audioDIME_, by _Flavio Ingenito, Luca Comanducci, Francesca Ronchini, Paolo Bestagini_, submitted to ICASSP 2027.
 
-## Abstract
+<h2 align="center">Abstract</h2>
 
 Audio LLMs have advanced music understanding, yet how they combine audio and text remains unclear, and %standard attribution cannot distinguish correlation from causal reliance
 standard attribution methods do not test whether attributed features are necessary or sufficient under intervention. We adapt DIME to disentangle unimodal contributions from multimodal interactions in Qwen2.5-Omni-7B and AudioFlamingo3 on HumMusQA, and evaluate their necessity and sufficiency through masking. Across both models, audio’s unimodal contribution is often sufficient but rarely necessary, whereas interaction features have substantially higher necessity and, under complete input, approach text contributions. These results suggest that audio primarily influences predictions through its interaction with the question rather than as an independent decision signal.
 
-## Additional Material
+<h2 align="center">Additional Material</h2>
 
 Due to space constraints, the paper reports sufficiency and necessity results only for the complete condition of both models. Here, we provide the extended results for all conditions, together with a worked example that illustrates the audio segmentation. Specifically, we present:
 
@@ -40,7 +40,7 @@ Samples with <em>p<sub>orig</sub></em> &lt; 0.40 are excluded from every curve, 
   </tbody>
 </table>
 
-### Sufficiency & Necessity of MI
+<h2 align="center">Sufficiency & Necessity of MI</h2>
 
 For each sample, sufficiency measures whether the top-ranked `MI` (multimodal interaction) features alone preserve the model's confidence in its original answer, whereas necessity measures whether removing them reduces that confidence. Both metrics are normalized against chance level. Results are reported separately for samples whose original prediction was correct or incorrect.
 
@@ -89,7 +89,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-### Modality Contributions
+<h2 align="center">Modality Contributions</h2>
 
 For correctly predicted samples, we compare the sufficiency and necessity of features ranked by `UC_text`, `UC_audio`, and `MI`.
 
@@ -140,8 +140,8 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
   </div>
 </div>
 
+<h2 align="center">Audio Segmentation Example</h2>
 
-### Audio Segmentation Example
 
 To illustrate that onset-guided segmentation yields meaningful, source-specific audio events rather than arbitrary chunks, this section provides an interactive example from HumMusQA. The original waveform is first separated into four stems (bass, drums, other, and vocals) using Demucs. Each stem is then divided into temporally localized segments guided by onset detection, resulting in 4 stems × 8 segments = 32 source-segment audio features.
 
