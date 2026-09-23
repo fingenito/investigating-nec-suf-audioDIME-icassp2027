@@ -89,9 +89,9 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-###  Modality Contributions
+### Modality Contributions
 
-For samples where the model's original prediction was correct, we compare sufficiency and necessity across the three feature sources: `UC_text`, `UC_audio`, and `MI`.
+For correctly predicted samples, we compare the sufficiency and necessity of features ranked by `UC_text`, `UC_audio`, and `MI`.
 
 - Complete condition
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
