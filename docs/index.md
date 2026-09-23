@@ -59,7 +59,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-<h4 align="center">Text_only condition</h4>
+<h4 align="center">Text-only condition</h4>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -74,7 +74,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   </div>
 </div>
 
-<h4 align="center">Audio_only condition</h4>
+<h4 align="center">Audio-only condition</h4>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -108,7 +108,7 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
   </div>
 </div>
 
-<h4 align="center">Text_only condition</h4> 
+<h4 align="center">Text-only condition</h4> 
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
@@ -122,10 +122,10 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
     <em>AudioFlamingo3</em>
   </div>
 </div>
-<p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: The Qwen2.5-Omni y-axis extends to 1.4 rather than 1.0 because `UC_text` sufficiency exceeds 1.0 under this condition. This can occur under chance-normalized scoring when the retained features yield confidence higher than that of the original prediction; limiting the axis to 1.0 would clip these values.</em></p>
+<p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: The Qwen2.5-Omni y-axis extends to 1.4 rather than 1.0 because <code>UC_text</code> sufficiency exceeds 1.0 under this condition. This can occur under chance-normalized scoring when the retained features yield confidence higher than that of the original prediction; limiting the axis to 1.0 would clip these values.</em></p>
 
 
-<h4 align="center">Audio_only condition</h4> 
+<h4 align="center">Audio-only condition</h4> 
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
