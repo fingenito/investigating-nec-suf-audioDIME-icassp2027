@@ -122,7 +122,7 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
     <em>AudioFlamingo3</em>
   </div>
 </div>
-<p style="text-align: center; font-size: 0.9em; color: #555;"><em>>Note: The Qwen2.5-Omni y-axis extends to 1.4 rather than 1.0 because `UC_text` sufficiency exceeds 1.0 under this condition. This can occur under chance-normalized scoring when the retained features yield confidence higher than that of the original prediction; limiting the axis to 1.0 would clip these values.</em></p>
+<p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: The Qwen2.5-Omni y-axis extends to 1.4 rather than 1.0 because `UC_text` sufficiency exceeds 1.0 under this condition. This can occur under chance-normalized scoring when the retained features yield confidence higher than that of the original prediction; limiting the axis to 1.0 would clip these values.</em></p>
 
 
 <h4 align="center">Audio_only condition</h4> 
@@ -143,9 +143,9 @@ For correctly predicted samples, we compare the sufficiency and necessity of fea
 
 ### Audio Segmentation Example
 
-To verify that onset-guided segmentation yields meaningful, source-specific audio events rather than arbitrary chunks, this section provides an interactive example from HumMusQA. The original waveform is first separated into four stems—bass, drums, other, and vocals—using Demucs. Each stem is then divided into temporally localized segments guided by onset detection, resulting in 4 stems × 8 segments = 32 source-segment audio features.
+To verify that onset-guided segmentation yields meaningful, source-specific audio events rather than arbitrary chunks, this section provides an interactive example from HumMusQA. The original waveform is first separated into four stems (bass, drums, other, and vocals) using Demucs. Each stem is then divided into temporally localized segments guided by onset detection, resulting in 4 stems × 8 segments = 32 source-segment audio features.
 
-The waveform beneath each clip indicates where the segment contains audio within the silence-padded signal. Each segment corresponds to a localized event, and you can click directly on the visible waveform to jump to it.
+The waveform shown below each clip indicates where the segment contains audio within the silence-padded signal. Each segment corresponds to a localized event, and you can click directly on the visible waveform to jump to it.
 
 <p align="center">
   <span class="wsplayer" data-wsplayer data-src="assets/audio/sample_01/originale.wav" style="width: 320px;">
@@ -241,4 +241,4 @@ The waveform beneath each clip indicates where the segment contains audio within
     </div>
   </div>
 </div>
-<p align="center"><em>The 32 source-segment audio features obtained after onset-guided segmentation (4 stems &times; 8 temporal segments, in chronological order within each stem). Each clip is the full-length reconstruction with only that segment active, so the waveform position shows exactly where the segment sits in time.</em></p>
+<p align="center"><em>The 32 source-segment audio features obtained through onset-guided segmentation (four stems × eight temporal segments, ordered chronologically within each stem). Each clip is a full-length reconstruction in which only that segment is active, so its waveform position shows exactly where the segment occurs in time.</em></p>
