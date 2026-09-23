@@ -14,8 +14,9 @@ arXiv still not available!
 This repository contains the code for *[Investigating Necessity and Sufficiency of
 Multimodal Interaction in Music-QA LLMs via audioDIME]()*, submitted to ICASSP 2027.
 
-
 In this paper, we investigate how Large Audio Language Models (LALM) combine input modalities, audio and text, to generate a response. To do this, we propose audioDIME, an adaptation of the [DIME](https://arxiv.org/pdf/2203.02013) framework to the audio-musical domain, to disentangle unimodal contributions from multimodal interactions in [Qwen2.5-Omni-7B](https://arxiv.org/pdf/2503.20215) and [AudioFlamingo3](https://arxiv.org/pdf/2507.08128) on [HumMusQA](https://arxiv.org/pdf/2603.27877), and evaluate their necessity and sufficiency through masking.
+
+Supplementary material is available [here](https://fingenito.github.io/investigating-nec-suf-audioDIME-icassp2027/).
 
 ## Method
 
