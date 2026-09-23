@@ -35,9 +35,10 @@ Samples with <em>p<sub>orig</sub></em> &lt; 0.40 are excluded from every curve, 
 
 ### Sufficiency & Necessity of MI
 
-For each sample, sufficiency measures whether the top-ranked MI (multimodal interaction) features alone preserve the model's confidence in its original answer, while necessity measures whether removing them destroys that confidence, both normalized against chance level. Results are reported separately for samples where the model's original prediction was correct or incorrect.
+For each sample, sufficiency measures whether the top-ranked `MI` (multimodal interaction) features alone preserve the model's confidence in its original answer, whereas necessity measures whether removing them reduces that confidence. Both metrics are normalized against chance level. Results are reported separately for samples whose original prediction was correct or incorrect.
 
-- Complete condition
+#### Complete Condition
+
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/qwen_complete_mi_by_correctness.png" style="width: 100%;"/>
