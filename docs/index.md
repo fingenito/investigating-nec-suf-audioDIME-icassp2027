@@ -55,7 +55,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_complete_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
@@ -70,7 +70,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_audio_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
@@ -85,7 +85,7 @@ For each sample, sufficiency measures whether the top-ranked `MI` (multimodal in
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_text_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
@@ -103,7 +103,7 @@ For samples where the model's original prediction was correct, we compare suffic
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_complete_modality_diagnosis.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
@@ -117,7 +117,7 @@ For samples where the model's original prediction was correct, we compare suffic
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_audio_only_modality_diagnosis.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
@@ -131,7 +131,7 @@ For samples where the model's original prediction was correct, we compare suffic
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_text_only_modality_diagnosis.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 <p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: the Qwen2.5-Omni y-axis reaches 1.4 (instead of 1.0) here because UC_text's sufficiency exceeds 1.0 in this condition and would otherwise be clipped.</em></p>
