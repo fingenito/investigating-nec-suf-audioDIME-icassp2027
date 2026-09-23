@@ -20,93 +20,94 @@ Due to space constraints, the paper only reports sufficiency/necessity results f
 
 For each sample, sufficiency measures whether the top-ranked MI (multimodal interaction) features alone preserve the model's confidence in its original answer, while necessity measures whether removing them destroys that confidence, both normalized against chance level. Results are reported separately for samples where the model's original prediction was correct or incorrect.
 
-- Qwen2.5-Omni, complete condition
-<p align="center">
-  <img src="assets/img/qwen_complete_mi_by_correctness.png" width="55%"/>
-  <br/>
-  <em>Qwen2.5-Omni — complete condition.</em>
-</p>
+- Complete condition
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_complete_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_complete_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Audio Flamingo 3</em>
+  </div>
+</div>
 
-- Qwen2.5-Omni, audio-only condition
-<p align="center">
-  <img src="assets/img/qwen_audio_only_mi_by_correctness.png" width="55%"/>
-  <br/>
-  <em>Qwen2.5-Omni — audio-only condition.</em>
-</p>
+- Audio-only condition
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_audio_only_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_audio_only_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Audio Flamingo 3</em>
+  </div>
+</div>
 
-- Qwen2.5-Omni, text-only condition
-<p align="center">
-  <img src="assets/img/qwen_text_only_mi_by_correctness.png" width="55%"/>
-  <br/>
-  <em>Qwen2.5-Omni — text-only condition.</em>
-</p>
-
-- Audio Flamingo 3, complete condition
-<p align="center">
-  <img src="assets/img/af3_complete_mi_by_correctness.png" width="55%"/>
-  <br/>
-  <em>Audio Flamingo 3 — complete condition.</em>
-</p>
-
-- Audio Flamingo 3, audio-only condition
-<p align="center">
-  <img src="assets/img/af3_audio_only_mi_by_correctness.png" width="55%"/>
-  <br/>
-  <em>Audio Flamingo 3 — audio-only condition.</em>
-</p>
-
-- Audio Flamingo 3, text-only condition
-<p align="center">
-  <img src="assets/img/af3_text_only_mi_by_correctness.png" width="55%"/>
-  <br/>
-  <em>Audio Flamingo 3 — text-only condition.</em>
-</p>
+- Text-only condition
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_text_only_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_text_only_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Audio Flamingo 3</em>
+  </div>
+</div>
 
 ### Modality Diagnosis
 
 For samples where the model's original prediction was correct, we compare sufficiency and necessity across the three feature sources: `UC_text`, `UC_audio`, and `MI`.
 
-- Qwen2.5-Omni, complete condition
-<p align="center">
-  <img src="assets/img/qwen_complete_modality_diagnosis.png" width="55%"/>
-  <br/>
-  <em>Qwen2.5-Omni — complete condition.</em>
-</p>
+- Complete condition
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_complete_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_complete_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Audio Flamingo 3</em>
+  </div>
+</div>
 
-- Qwen2.5-Omni, audio-only condition
-<p align="center">
-  <img src="assets/img/qwen_audio_only_modality_diagnosis.png" width="55%"/>
-  <br/>
-  <em>Qwen2.5-Omni — audio-only condition.</em>
-</p>
+- Audio-only condition
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_audio_only_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_audio_only_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Audio Flamingo 3</em>
+  </div>
+</div>
 
-- Qwen2.5-Omni, text-only condition
-<p align="center">
-  <img src="assets/img/qwen_text_only_modality_diagnosis.png" width="55%"/>
-  <br/>
-  <em>Qwen2.5-Omni — text-only condition.</em>
-</p>
-
-- Audio Flamingo 3, complete condition
-<p align="center">
-  <img src="assets/img/af3_complete_modality_diagnosis.png" width="55%"/>
-  <br/>
-  <em>Audio Flamingo 3 — complete condition.</em>
-</p>
-
-- Audio Flamingo 3, audio-only condition
-<p align="center">
-  <img src="assets/img/af3_audio_only_modality_diagnosis.png" width="55%"/>
-  <br/>
-  <em>Audio Flamingo 3 — audio-only condition.</em>
-</p>
-
-- Audio Flamingo 3, text-only condition
-<p align="center">
-  <img src="assets/img/af3_text_only_modality_diagnosis.png" width="55%"/>
-  <br/>
-  <em>Audio Flamingo 3 — text-only condition.</em>
-</p>
+- Text-only condition
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_text_only_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_text_only_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Audio Flamingo 3</em>
+  </div>
+</div>
+<p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: the Qwen2.5-Omni y-axis reaches 1.4 (instead of 1.0) here because UC_text's sufficiency exceeds 1.0 in this condition and would otherwise be clipped.</em></p>
 
 ### Audio Segmentation Example
 
