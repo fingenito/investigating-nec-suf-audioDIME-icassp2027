@@ -5,33 +5,46 @@ title: "Investigating Necessity and Sufficiency of Multimodal Interaction in Mus
 
 Accompanying website to the paper _Investigating Necessity and Sufficiency of Multimodal Interaction in Music-QA LLMs via audioDIME_, by _Flavio Ingenito, Luca Comanducci, Francesca Ronchini, Paolo Bestagini_, submitted to ICASSP 2027.
 
-## Abstract
+<h2 align="center">Abstract</h2>
 
 Audio LLMs have advanced music understanding, yet how they combine audio and text remains unclear, and standard attribution methods do not test whether attributed features are necessary or sufficient when perturbed. We adapt DIME to disentangle unimodal contributions from multimodal interactions in Qwen2.5-Omni-7B and AudioFlamingo3 on HumMusQA, and evaluate their necessity and sufficiency through masking. Across both models, audio's unimodal contribution is often sufficient but rarely necessary, whereas interaction features have substantially higher necessity and, under complete input, approach text contributions. These results suggest that audio primarily influences predictions through its interaction with the question rather than as an independent decision signal.
 
-## Additional material
+<h2 align="center">Additional Material</h2>
 
-Due to space constraints, the paper only reports sufficiency/necessity results for the complete condition of both models. In the following we report the extended results for all conditions, together with a worked example verifying the audio segmentation itself. Specifically, we present:
-- Sufficiency and necessity of `MI`, split by prediction correctness, for all 6 combinations of model (Qwen2.5-Omni, Audio Flamingo 3) and condition (complete, audio-only, text-only).
-- The same breakdown across `UC_text`, `UC_audio`, and `MI` (modality diagnosis), for correct predictions only, again for all 6 combinations.
-- A worked example of the onset-guided audio segmentation on one HumMusQA sample, to demonstrate that the resulting segments are meaningful and correctly localized in time.
+Due to space constraints, the paper reports sufficiency and necessity results only for the complete condition of both models. Here, we provide the extended results for all conditions, together with a worked example that illustrates the audio segmentation. Specifically, we present:
 
-Samples with <em>p<sub>orig</sub></em> &lt; 0.40 are excluded from every curve above, since the normalization denominator would otherwise be too small and unstable. The table below reports, out of 320 samples, how many remain after this filter for each model/condition, split by whether the model's original prediction was correct, to make the effective sample size behind each curve explicit.
+- Sufficiency and necessity of `MI`, split by prediction correctness, for all six combinations of model (Qwen2.5-Omni and AudioFlamingo3) and condition (complete, audio-only, and text-only).
+- The same breakdown for `UC_text`, `UC_audio`, and `MI` (modality diagnosis), considering correct predictions only, again for all six combinations.
+- A worked example of onset-guided audio segmentation for one HumMusQA sample, showing that the resulting segments are meaningful and correctly localized in time.
 
-| Model | Condition | Remaining | Correct | Incorrect |
-|---|---|---|---|---|
-| Qwen2.5-Omni | Complete | 300 | 192 | 108 |
-| Qwen2.5-Omni | Audio-only | 270 | 120 | 150 |
-| Qwen2.5-Omni | Text-only | 283 | 100 | 183 |
-| Audio Flamingo 3 | Complete | 300 | 204 | 96 |
-| Audio Flamingo 3 | Audio-only | 283 | 175 | 108 |
-| Audio Flamingo 3 | Text-only | 290 | 167 | 123 |
+Samples with <em>p<sub>orig</sub></em> &lt; 0.40 are excluded from every curve, as the normalization denominator would otherwise be too small and unstable. The table below reports, out of 320 samples, how many remain after this filter for each model and condition, split according to whether the model's original prediction was correct. This makes the effective sample size behind each curve explicit.
 
-### Sufficiency & Necessity of MI
+<table align="center">
+  <thead>
+    <tr>
+      <th align="left">Model</th>
+      <th align="left">Condition</th>
+      <th align="right">Remaining</th>
+      <th align="right">Correct</th>
+      <th align="right">Incorrect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Qwen2.5-Omni</td><td>Complete</td><td align="right">300</td><td align="right">192</td><td align="right">108</td></tr>
+    <tr><td>Qwen2.5-Omni</td><td>Audio-only</td><td align="right">270</td><td align="right">120</td><td align="right">150</td></tr>
+    <tr><td>Qwen2.5-Omni</td><td>Text-only</td><td align="right">283</td><td align="right">100</td><td align="right">183</td></tr>
+    <tr><td>AudioFlamingo3</td><td>Complete</td><td align="right">300</td><td align="right">204</td><td align="right">96</td></tr>
+    <tr><td>AudioFlamingo3</td><td>Audio-only</td><td align="right">283</td><td align="right">175</td><td align="right">108</td></tr>
+    <tr><td>AudioFlamingo3</td><td>Text-only</td><td align="right">290</td><td align="right">167</td><td align="right">123</td></tr>
+  </tbody>
+</table>
 
-For each sample, sufficiency measures whether the top-ranked MI (multimodal interaction) features alone preserve the model's confidence in its original answer, while necessity measures whether removing them destroys that confidence, both normalized against chance level. Results are reported separately for samples where the model's original prediction was correct or incorrect.
+<h2 align="center">Sufficiency & Necessity of MI</h2>
 
-- Complete condition
+For each sample, sufficiency measures whether the top-ranked `MI` (multimodal interaction) features alone preserve the model's confidence in its original answer, whereas necessity measures whether removing them reduces that confidence. Both metrics are normalized against chance level. Results are reported separately for samples whose original prediction was correct or incorrect.
+
+<h4 align="center">Complete Condition</h4>
+
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/qwen_complete_mi_by_correctness.png" style="width: 100%;"/>
@@ -41,25 +54,12 @@ For each sample, sufficiency measures whether the top-ranked MI (multimodal inte
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_complete_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
-- Audio-only condition
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-  <div style="text-align: center; width: 47%;">
-    <img src="assets/img/qwen_audio_only_mi_by_correctness.png" style="width: 100%;"/>
-    <br/>
-    <em>Qwen2.5-Omni</em>
-  </div>
-  <div style="text-align: center; width: 47%;">
-    <img src="assets/img/af3_audio_only_mi_by_correctness.png" style="width: 100%;"/>
-    <br/>
-    <em>Audio Flamingo 3</em>
-  </div>
-</div>
+<h4 align="center">Text-only Condition</h4>
 
-- Text-only condition
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/qwen_text_only_mi_by_correctness.png" style="width: 100%;"/>
@@ -69,15 +69,31 @@ For each sample, sufficiency measures whether the top-ranked MI (multimodal inte
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_text_only_mi_by_correctness.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
-### Modality Diagnosis
+<h4 align="center">Audio-only Condition</h4>
 
-For samples where the model's original prediction was correct, we compare sufficiency and necessity across the three feature sources: `UC_text`, `UC_audio`, and `MI`.
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_audio_only_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_audio_only_mi_by_correctness.png" style="width: 100%;"/>
+    <br/>
+    <em>AudioFlamingo3</em>
+  </div>
+</div>
 
-- Complete condition
+<h2 align="center">Modality Contributions</h2>
+
+For correctly predicted samples, we compare the sufficiency and necessity of features ranked by `UC_text`, `UC_audio`, and `MI`.
+
+<h4 align="center">Complete Condition</h4> 
+
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/qwen_complete_modality_diagnosis.png" style="width: 100%;"/>
@@ -87,25 +103,12 @@ For samples where the model's original prediction was correct, we compare suffic
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_complete_modality_diagnosis.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
 
-- Audio-only condition
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-  <div style="text-align: center; width: 47%;">
-    <img src="assets/img/qwen_audio_only_modality_diagnosis.png" style="width: 100%;"/>
-    <br/>
-    <em>Qwen2.5-Omni</em>
-  </div>
-  <div style="text-align: center; width: 47%;">
-    <img src="assets/img/af3_audio_only_modality_diagnosis.png" style="width: 100%;"/>
-    <br/>
-    <em>Audio Flamingo 3</em>
-  </div>
-</div>
+<h4 align="center">Text-only Condition</h4> 
 
-- Text-only condition
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/qwen_text_only_modality_diagnosis.png" style="width: 100%;"/>
@@ -115,16 +118,33 @@ For samples where the model's original prediction was correct, we compare suffic
   <div style="text-align: center; width: 47%;">
     <img src="assets/img/af3_text_only_modality_diagnosis.png" style="width: 100%;"/>
     <br/>
-    <em>Audio Flamingo 3</em>
+    <em>AudioFlamingo3</em>
   </div>
 </div>
-<p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: the Qwen2.5-Omni y-axis reaches 1.4 (instead of 1.0) here because UC_text's sufficiency exceeds 1.0 in this condition and would otherwise be clipped.</em></p>
+<p style="text-align: center; font-size: 0.9em; color: #555;"><em>Note: The Qwen2.5-Omni y-axis extends to 1.4 rather than 1.0 because <code>UC_text</code> sufficiency exceeds 1.0 under this condition. This can occur under chance-normalized scoring when the retained features yield confidence higher than that of the original prediction; limiting the axis to 1.0 would clip these values.</em></p>
 
-### Audio Segmentation Example
 
-To verify that the onset-guided segmentation actually produces meaningful, source-specific audio events rather than arbitrary chunks, this section lets you listen to the full segmentation pipeline on one example sample from HumMusQA. The original waveform is first separated into 4 stems (bass, drums, other, vocals) using Demucs; each stem is then split into temporal segments guided by onset detection, giving 4 stems &times; 8 segments = 32 source-segment audio features.
+<h4 align="center">Audio-only Condition</h4> 
 
-<p>The waveform below each clip shows where in the (silent-padded) audio the segment actually has content. You can see at a glance that each segment lines up with a real, localized event, and you can click directly on the visible waveform to jump there.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/qwen_audio_only_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>Qwen2.5-Omni</em>
+  </div>
+  <div style="text-align: center; width: 47%;">
+    <img src="assets/img/af3_audio_only_modality_diagnosis.png" style="width: 100%;"/>
+    <br/>
+    <em>AudioFlamingo3</em>
+  </div>
+</div>
+
+<h2 align="center">Audio Segmentation Example</h2>
+
+
+To illustrate that onset-guided segmentation yields meaningful, source-specific audio events rather than arbitrary chunks, this section provides an interactive example from HumMusQA. The original waveform is first separated into four stems (bass, drums, other, and vocals) using Demucs. Each stem is then divided into temporally localized segments guided by onset detection, resulting in 4 stems × 8 segments = 32 source-segment audio features.
+
+The waveform shown below each clip indicates where the segment contains audio within the silence-padded signal. Each segment corresponds to a localized event, and you can click directly on the visible waveform to jump to it.
 
 <p align="center">
   <span class="wsplayer" data-wsplayer data-src="assets/audio/sample_01/originale.wav" style="width: 320px;">
@@ -220,4 +240,4 @@ To verify that the onset-guided segmentation actually produces meaningful, sourc
     </div>
   </div>
 </div>
-<p align="center"><em>The 32 source-segment audio features obtained after onset-guided segmentation (4 stems &times; 8 temporal segments, in chronological order within each stem). Each clip is the full-length reconstruction with only that segment active, so the waveform position shows exactly where the segment sits in time.</em></p>
+<p align="center"><em>The 32 source-segment audio features obtained through onset-guided segmentation (four stems × eight temporal segments, ordered chronologically within each stem). Each clip is a full-length reconstruction in which only that segment is active, so its waveform position shows exactly where the segment occurs in time.</em></p>
